@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REST API Dashboard & Live Tester</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        body {
+            background: #0b0f19;
+            color: #f1f5f9;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+        .title-area h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .title-area p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+        .nav-btn {
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .nav-btn.primary {
+            background: #6366f1;
+            color: white;
+        }
+        .nav-btn.secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .nav-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 24px;
+        }
+        @media (max-width: 820px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: #131b2e;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .card h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+        .badge.get { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .badge.post { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge.patch { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge.delete { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            background: #0b0f19;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+        }
+        input:focus, select:focus {
+            border-color: #6366f1;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 11px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-submit:hover {
+            background: #059669;
+        }
+
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .user-card {
+            background: #0b0f19;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        .user-info h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .user-info p {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 3px;
+        }
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .action-btn.edit {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .action-btn.delete {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .alert-box {
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .alert-box.success {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+        .alert-box.error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+        .api-endpoints-box {
+            margin-top: 30px;
+            background: #131b2e;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .endpoint-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 13px;
+        }
+        .endpoint-row:last-child {
+            border-bottom: none;
+        }
+        code {
+            color: #38bdf8;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="title-area">
+                <h1>Express.js REST API Dashboard</h1>
+                <p>Node.js & Express.js CRUD + Authentication Live Playground</p>
+            </div>
+            <div class="nav-links">
+                <a href="/login.html" class="nav-btn secondary">Login Page</a>
+                <a href="/signup.html" class="nav-btn primary">+ Signup Page</a>
+            </div>
+        </header>
+
+        <div id="statusAlert" class="alert-box"></div>
+
+        <div class="grid">
+            <!-- Left Side: Add / Update User Form -->
+            <div class="card">
+                <h2>
+                    <span id="formTitle">Create New User</span>
+                    <span class="badge post" id="methodBadge">POST</span>
+                </h2>
+
+                <form id="userForm">
+                    <input type="hidden" id="editUserId">
+
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="nameInput" placeholder="Ali Raza" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" id="emailInput" placeholder="aliraza@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="roleInput">
+                            <option value="Developer">Developer</option>
+                            <option value="Designer">Designer</option>
+                            <option value="Manager">Manager</option>
+                            <option value="QA Engineer">QA Engineer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="pwdGroup">
+                        <label>Password</label>
+                        <input type="password" id="passwordInput" placeholder="Default: password123">
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="saveBtn">Create User (POST)</button>
+                    <button type="button" class="action-btn" id="cancelBtn" style="display:none; width:100%; margin-top:8px; padding:10px; background:rgba(255,255,255,0.1); color:white;">Cancel Edit</button>
+                </form>
+            </div>
+
+            <!-- Right Side: Live Users List (GET) -->
+            <div class="card">
+                <h2>
+                    <span>Active Users in MySQL Database</span>
+                    <span class="badge get">GET /api/users</span>
+                </h2>
+                <div id="usersList" class="user-list">
+                    <p style="color:#94a3b8; font-size:14px;">Loading users from API...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Reference Endpoints -->
+        <div class="api-endpoints-box">
+            <h2 style="font-size:18px; margin-bottom:14px; color:#ffffff;">REST Endpoints Reference</h2>
+            <div class="endpoint-row">
+                <span class="badge get">GET</span>
+                <code>/api/users</code>
+                <span style="color:#94a3b8; margin-left:auto;">Returns all users (Status: 200)</span>
+            </div>
+            <div class="endpoint-row">
+                <span class="badge get">GET</span>
+                <code>/api/users/:id</code>
+                <span style="color:#94a3b8; margin-left:auto;">Returns single user by ID (Status: 200 / 404)</span>
+            </div>
+            <div class="endpoint-row">
+                <span class="badge post">POST</span>
+                <code>/api/users</code>
+                <span style="color:#94a3b8; margin-left:auto;">Creates user with validation (Status: 201 / 400)</span>
+            </div>
+            <div class="endpoint-row">
+                <span class="badge patch">PATCH</span>
+                <code>/api/users/:id</code>
+                <span style="color:#94a3b8; margin-left:auto;">Updates user partially (Status: 200 / 404 / 400)</span>
+            </div>
+            <div class="endpoint-row">
+                <span class="badge delete">DELETE</span>
+                <code>/api/users/:id</code>
+                <span style="color:#94a3b8; margin-left:auto;">Deletes user from array (Status: 200 / 404)</span>
+            </div>
+            <div class="endpoint-row">
+                <span class="badge post">POST</span>
+                <code>/api/auth/signup</code>
+                <span style="color:#94a3b8; margin-left:auto;">User registration (Status: 201 / 400)</span>
+            </div>
+            <div class="endpoint-row">
+                <span class="badge post">POST</span>
+                <code>/api/auth/login</code>
+                <span style="color:#94a3b8; margin-left:auto;">User authentication (Status: 200 / 401 / 404)</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const usersListEl = document.getElementById('usersList');
+        const userForm = document.getElementById('userForm');
+        const alertBox = document.getElementById('statusAlert');
+        const formTitle = document.getElementById('formTitle');
+        const methodBadge = document.getElementById('methodBadge');
+        const saveBtn = document.getElementById('saveBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const editUserId = document.getElementById('editUserId');
+        const pwdGroup = document.getElementById('pwdGroup');
+
+        function notify(msg, type = 'success') {
+            alertBox.textContent = msg;
+            alertBox.className = `alert-box ${type}`;
+            alertBox.style.display = 'block';
+            setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
+        }
+
+        // 1. Fetch & Render All Users [GET /api/users]
+        async function loadUsers() {
+            try {
+                const res = await fetch('/api/users');
+                const data = await res.json();
+                if (data.success) {
+                    renderUsers(data.data);
+                }
+            } catch (err) {
+                usersListEl.innerHTML = `<p style="color:#f87171;">Failed to load users: ${err.message}</p>`;
+            }
+        }
+
+        function renderUsers(users) {
+            if (users.length === 0) {
+                usersListEl.innerHTML = `<p style="color:#94a3b8; font-size:14px;">No users found in memory. Add one!</p>`;
+                return;
+            }
+            usersListEl.innerHTML = users.map(u => `
+                <div class="user-card">
+                    <div class="user-info">
+                        <h3>#${u.id} - ${u.name}</h3>
+                        <p>${u.email} • <span style="color:#a5b4fc;">${u.role}</span></p>
+                    </div>
+                    <div class="user-actions">
+                        <button class="action-btn edit" onclick="startEdit(${u.id}, '${u.name}', '${u.email}', '${u.role}')">Edit (PATCH)</button>
+                        <button class="action-btn delete" onclick="deleteUser(${u.id}, '${u.name}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 2. Submit Form (Create [POST] or Update [PATCH])
+        userForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = editUserId.value;
+            const name = document.getElementById('nameInput').value.trim();
+            const email = document.getElementById('emailInput').value.trim();
+            const role = document.getElementById('roleInput').value;
+            const password = document.getElementById('passwordInput').value;
+
+            try {
+                if (id) {
+                    // PATCH request
+                    const res = await fetch(`/api/users/${id}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email, role })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        notify(data.message, 'success');
+                        resetForm();
+                        loadUsers();
+                    } else {
+                        notify(data.message || 'Update failed', 'error');
+                    }
+                } else {
+                    // POST request
+                    const res = await fetch('/api/users', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email, role, password })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        notify(data.message, 'success');
+                        resetForm();
+                        loadUsers();
+                    } else {
+                        notify(data.message || 'Creation failed', 'error');
+                    }
+                }
+            } catch (err) {
+                notify('Network error: ' + err.message, 'error');
+            }
+        });
+
+        // 3. Edit mode setup
+        window.startEdit = (id, name, email, role) => {
+            editUserId.value = id;
+            document.getElementById('nameInput').value = name;
+            document.getElementById('emailInput').value = email;
+            document.getElementById('roleInput').value = role;
+
+            formTitle.textContent = `Update User #${id}`;
+            methodBadge.textContent = 'PATCH';
+            methodBadge.className = 'badge patch';
+            saveBtn.textContent = 'Save Changes (PATCH)';
+            saveBtn.style.background = '#f59e0b';
+            cancelBtn.style.display = 'block';
+            pwdGroup.style.display = 'none';
+        };
+
+        cancelBtn.addEventListener('click', resetForm);
+
+        function resetForm() {
+            editUserId.value = '';
+            userForm.reset();
+            formTitle.textContent = 'Create New User';
+            methodBadge.textContent = 'POST';
+            methodBadge.className = 'badge post';
+            saveBtn.textContent = 'Create User (POST)';
+            saveBtn.style.background = '#10b981';
+            cancelBtn.style.display = 'none';
+            pwdGroup.style.display = 'block';
+        }
+
+        // 4. Delete User [DELETE /api/users/:id]
+        window.deleteUser = async (id, name) => {
+            if (!confirm(`Are you sure you want to delete '${name}' (ID: ${id})?`)) return;
+
+            try {
+                const res = await fetch(`/api/users/${id}`, {
+                    method: 'DELETE'
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    notify(data.message, 'success');
+                    loadUsers();
+                } else {
+                    notify(data.message || 'Delete failed', 'error');
+                }
+            } catch (err) {
+                notify('Network error: ' + err.message, 'error');
+            }
+        };
+
+        // Initial Load
+        loadUsers();
+    </script>
+</body>
+</html>

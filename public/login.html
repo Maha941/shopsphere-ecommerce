@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Again! - Sign In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Outer Split Container */
+        .auth-container {
+            width: 100%;
+            max-width: 1100px;
+            min-height: 640px;
+            background: #ffffff;
+            border-radius: 36px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.07);
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            padding: 16px;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        @media (max-width: 900px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+                max-width: 480px;
+                border-radius: 28px;
+            }
+            .illustration-side {
+                display: none !important;
+            }
+        }
+
+        /* Left Side: Form */
+        .form-side {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px 48px;
+        }
+
+        @media (max-width: 480px) {
+            .form-side {
+                padding: 24px 16px;
+            }
+        }
+
+        .form-side h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            font-weight: 500;
+            color: #4b5563;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 20px;
+            background: #ffffff;
+            border: 1.5px solid #edf0f5;
+            border-radius: 16px;
+            font-size: 14px;
+            color: #1e293b;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-field::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .input-field:focus {
+            border-color: #8c5c6d;
+            box-shadow: 0 0 0 4px rgba(140, 92, 109, 0.12);
+        }
+
+        .password-field {
+            padding-right: 50px;
+        }
+
+        /* Eye Icon Button */
+        .toggle-password {
+            position: absolute;
+            right: 18px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #94a3b8;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: #475569;
+        }
+
+        /* Recovery link */
+        .recovery-link {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 6px;
+            margin-bottom: 24px;
+        }
+
+        .recovery-link a {
+            font-size: 12px;
+            font-weight: 500;
+            color: #64748b;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .recovery-link a:hover {
+            color: #8c5c6d;
+        }
+
+        /* Main Sign In Button (Reference dusty rose/mauve) */
+        .btn-signin {
+            width: 100%;
+            padding: 16px;
+            background-color: #8c5c6d;
+            color: #ffffff;
+            border: none;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 25px -5px rgba(140, 92, 109, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .btn-signin:hover {
+            background-color: #7b4f5f;
+            transform: translateY(-1px);
+            box-shadow: 0 12px 28px -5px rgba(140, 92, 109, 0.55);
+        }
+
+        .btn-signin:active {
+            transform: translateY(0);
+        }
+
+        /* Or continue with divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 32px 0 24px 0;
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .divider span {
+            padding: 0 16px;
+        }
+
+        /* Social login buttons */
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .social-btn {
+            width: 60px;
+            height: 52px;
+            border-radius: 16px;
+            background: #ffffff;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
+        }
+
+        /* Active highlight on Apple icon like screenshot */
+        .social-btn.highlight {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            border-color: #e2e8f0;
+        }
+
+        .bottom-link {
+            text-align: center;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .bottom-link a {
+            color: #8c5c6d;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .bottom-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Alert notifications */
+        .alert-box {
+            display: none;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .alert-box.success {
+            background-color: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-box.error {
+            background-color: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        /* Right Side: Illustration Container */
+        .illustration-side {
+            background: #2b1f2e;
+            border-radius: 28px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px;
+        }
+
+        .illustration-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .illustration-overlay-text {
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            line-height: 1.4;
+            max-width: 320px;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .slider-controls {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            gap: 12px;
+        }
+
+        .slider-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .slider-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.05);
+        }
+
+        /* OAuth Interactive Modal Popup */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 420px;
+            padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: modalFadeIn 0.2s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .modal-desc {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .account-select-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .account-select-card:hover {
+            border-color: #8c5c6d;
+            background: #fafafa;
+        }
+
+        .account-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #8c5c6d;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .account-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .account-info p {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-cancel-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            background: transparent;
+            font-weight: 600;
+            font-size: 13px;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        .modal-confirm-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            background: #8c5c6d;
+            font-weight: 600;
+            font-size: 13px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(140, 92, 109, 0.35);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <!-- Left Side: Form -->
+        <div class="form-side">
+            <h1>Hello Again!</h1>
+            <p class="subtitle">Let's get started with your 30 days trial</p>
+
+            <div id="alertBox" class="alert-box"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input type="email" id="email" class="input-field" placeholder="Email" required autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input type="password" id="password" class="input-field password-field" placeholder="Password" required>
+                        <button type="button" id="togglePasswordBtn" class="toggle-password" title="Show / Hide Password" aria-label="Toggle password visibility">
+                            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m15 18-.722-3.25"/>
+                                <path d="M2 8a10.645 10.645 0 0 0 20 0"/>
+                                <path d="m20 15-1.726-2.05"/>
+                                <path d="m4 15 1.726-2.05"/>
+                                <path d="m9 18 .722-3.25"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="recovery-link">
+                    <a href="#" onclick="alert('Password Recovery: Link has been simulated to your registered email address.'); return false;">Recovery Password</a>
+                </div>
+
+                <button type="submit" class="btn-signin" id="submitBtn">Sign In</button>
+            </form>
+
+            <div class="divider">
+                <span>Or continue with</span>
+            </div>
+
+            <!-- Social Login Icons (Connected to /api/auth/social-login) -->
+            <div class="social-buttons">
+                <!-- Google Button -->
+                <button type="button" class="social-btn" id="googleBtn" title="Continue with Google" onclick="openSocialModal('Google')">
+                    <svg width="22" height="22" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                </button>
+
+                <!-- Apple Button (Highlighted card style) -->
+                <button type="button" class="social-btn highlight" id="appleBtn" title="Continue with Apple ID" onclick="openSocialModal('Apple')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#000000">
+                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.87c.66-.82 1.11-1.96.99-3.1-.96.04-2.13.65-2.82 1.45-.61.71-1.14 1.87-1 2.99 1.07.08 2.17-.52 2.83-1.34z"/>
+                    </svg>
+                </button>
+
+                <!-- Facebook Button -->
+                <button type="button" class="social-btn" id="fbBtn" title="Continue with Facebook" onclick="openSocialModal('Facebook')">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#1877F2">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="bottom-link">
+                Don't have an account? <a href="/signup.html">Sign Up here</a>
+            </div>
+        </div>
+
+        <!-- Right Side: Beautiful Scenic Illustration -->
+        <div class="illustration-side">
+            <!-- Inline SVG Landscape matching reference image -->
+            <svg class="illustration-svg" viewBox="0 0 500 650" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#3d2b42"/>
+                        <stop offset="35%" stop-color="#724759"/>
+                        <stop offset="60%" stop-color="#b66f68"/>
+                        <stop offset="80%" stop-color="#e99d71"/>
+                        <stop offset="100%" stop-color="#f8cf95"/>
+                    </linearGradient>
+
+                    <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#ffffff"/>
+                        <stop offset="40%" stop-color="#fff8db"/>
+                        <stop offset="80%" stop-color="#fce4a6" stop-opacity="0.8"/>
+                        <stop offset="100%" stop-color="#fce4a6" stop-opacity="0"/>
+                    </radialGradient>
+
+                    <linearGradient id="valleyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#d4c7db"/>
+                        <stop offset="50%" stop-color="#a48dae"/>
+                        <stop offset="100%" stop-color="#553a5c"/>
+                    </linearGradient>
+                </defs>
+
+                <rect width="500" height="650" fill="url(#skyGrad)"/>
+
+                <circle cx="90" cy="230" r="110" fill="url(#sunGlow)"/>
+                <circle cx="90" cy="230" r="50" fill="#fffdfa" opacity="0.9"/>
+
+                <!-- Distant Striped Hills -->
+                <path d="M220 310 Q260 250 310 300 Q360 270 420 310 L500 340 L500 450 L200 450 Z" fill="#2d1c31"/>
+                <path d="M245 285 Q265 265 290 290" stroke="#fce4a6" stroke-width="4" fill="none" opacity="0.8"/>
+                <path d="M235 295 Q255 275 280 300" stroke="#fce4a6" stroke-width="4" fill="none" opacity="0.8"/>
+                <path d="M225 305 Q245 285 270 310" stroke="#fce4a6" stroke-width="4" fill="none" opacity="0.8"/>
+
+                <path d="M0 380 Q140 330 280 380 T500 370 L500 650 L0 650 Z" fill="#442a49"/>
+
+                <path d="M200 370 Q320 360 480 330 Q500 340 500 450 Q360 410 320 480 Q250 490 200 370 Z" fill="#9f8aa9"/>
+                <path d="M190 380 C270 370 340 390 400 440 C340 450 260 460 220 520 L0 520 L0 440 C70 420 130 400 190 380 Z" fill="url(#valleyGrad)"/>
+
+                <path d="M0 480 Q200 460 380 520 T500 580 L500 650 L0 650 Z" fill="#301b36"/>
+                <path d="M0 540 Q150 510 320 570 T500 630 L500 650 L0 650 Z" fill="#1e1022"/>
+
+                <g stroke="#1e1022" stroke-width="3" stroke-linecap="round" fill="none">
+                    <line x1="260" y1="580" x2="260" y2="470"/>
+                    <line x1="260" y1="540" x2="245" y2="510"/>
+                    <line x1="260" y1="520" x2="275" y2="490"/>
+                    <line x1="260" y1="500" x2="250" y2="475"/>
+                    <line x1="260" y1="485" x2="270" y2="465"/>
+                    <line x1="245" y1="510" x2="238" y2="500"/>
+                    <line x1="275" y1="490" x2="282" y2="480"/>
+                </g>
+
+                <g stroke="#1a0c1f" stroke-width="3.5" stroke-linecap="round" fill="none">
+                    <line x1="300" y1="600" x2="300" y2="450"/>
+                    <line x1="300" y1="550" x2="280" y2="510"/>
+                    <line x1="300" y1="520" x2="320" y2="480"/>
+                    <line x1="300" y1="490" x2="285" y2="455"/>
+                    <line x1="300" y1="470" x2="315" y2="440"/>
+                    <line x1="280" y1="510" x2="270" y2="500"/>
+                    <line x1="320" y1="480" x2="330" y2="470"/>
+                </g>
+
+                <g stroke="#26142c" stroke-width="2.5" stroke-linecap="round" fill="none">
+                    <line x1="360" y1="610" x2="360" y2="500"/>
+                    <line x1="360" y1="570" x2="348" y2="540"/>
+                    <line x1="360" y1="545" x2="372" y2="520"/>
+                    <line x1="360" y1="525" x2="350" y2="505"/>
+                </g>
+                
+                <g stroke="#1e1022" stroke-width="2" stroke-linecap="round" fill="none">
+                    <line x1="220" y1="590" x2="210" y2="560"/>
+                    <line x1="220" y1="590" x2="225" y2="565"/>
+                    <line x1="400" y1="620" x2="410" y2="585"/>
+                    <line x1="400" y1="620" x2="395" y2="595"/>
+                </g>
+            </svg>
+
+            <div class="illustration-overlay-text">
+                Finally, all your work in one place.
+            </div>
+
+            <div class="slider-controls">
+                <button type="button" class="slider-btn" aria-label="Previous slide">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                </button>
+                <button type="button" class="slider-btn" aria-label="Next slide">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social OAuth Consent Modal -->
+    <div id="socialModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span id="modalIcon"></span>
+                <h3 id="modalTitle">Sign In with Social Account</h3>
+            </div>
+            <p class="modal-desc" id="modalDesc">Select an account to authorize and sign in to your Express.js backend:</p>
+
+            <div class="account-select-card" id="primaryAccountCard" onclick="proceedSocialAuth()">
+                <div class="account-avatar" id="avatarInitial">M</div>
+                <div class="account-info">
+                    <h4 id="accountName">Mahjbeen Afzal</h4>
+                    <p id="accountEmail">maharajput941@gmail.com</p>
+                </div>
+            </div>
+
+            <div class="account-select-card" onclick="useCustomEmailSocial()">
+                <div class="account-avatar" style="background:#475569;">+</div>
+                <div class="account-info">
+                    <h4>Use another account</h4>
+                    <p>Enter any custom email address</p>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="modal-cancel-btn" onclick="closeSocialModal()">Cancel</button>
+                <button type="button" class="modal-confirm-btn" onclick="proceedSocialAuth()">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('loginForm');
+        const alertBox = document.getElementById('alertBox');
+        const submitBtn = document.getElementById('submitBtn');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        // Eye SVGs
+        const eyeOpenSVG = `
+            <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0z"/>
+            <circle cx="12" cy="12" r="3"/>
+        `;
+        const eyeClosedSVG = `
+            <path d="m15 18-.722-3.25"/>
+            <path d="M2 8a10.645 10.645 0 0 0 20 0"/>
+            <path d="m20 15-1.726-2.05"/>
+            <path d="m4 15 1.726-2.05"/>
+            <path d="m9 18 .722-3.25"/>
+        `;
+
+        // Toggle Password
+        togglePasswordBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            if (isPassword) {
+                passwordInput.type = 'text';
+                eyeIcon.innerHTML = eyeOpenSVG;
+                togglePasswordBtn.title = "Hide Password";
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.innerHTML = eyeClosedSVG;
+                togglePasswordBtn.title = "Show Password";
+            }
+        });
+
+        function showAlert(message, type) {
+            alertBox.textContent = message;
+            alertBox.className = `alert-box ${type}`;
+            alertBox.style.display = 'block';
+        }
+
+        // Standard Email/Password Login
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Signing in...';
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    showAlert(data.message + ' (Redirecting to Dashboard...)', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1500);
+                } else {
+                    showAlert(data.message || 'Login failed', 'error');
+                }
+            } catch (err) {
+                showAlert('Server se rabta nahi ho saka: ' + err.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Sign In';
+            }
+        });
+
+        // ============================================================
+        // Social Media Login (Google, Apple, Facebook) Flow
+        // ============================================================
+        let currentSocialProvider = 'Google';
+        let selectedSocialEmail = 'maharajput941@gmail.com';
+        let selectedSocialName = 'Mahjbeen Afzal';
+
+        const socialModal = document.getElementById('socialModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalIcon = document.getElementById('modalIcon');
+        const accountEmailEl = document.getElementById('accountEmail');
+        const accountNameEl = document.getElementById('accountName');
+        const avatarInitialEl = document.getElementById('avatarInitial');
+
+        function openSocialModal(provider) {
+            currentSocialProvider = provider;
+            modalTitle.textContent = `Sign in with ${provider}`;
+
+            // Sync with whatever email is typed into the input, or default to screenshot email
+            const typedEmail = emailInput.value.trim();
+            if (typedEmail) {
+                selectedSocialEmail = typedEmail;
+                selectedSocialName = typedEmail.split('@')[0];
+            } else {
+                selectedSocialEmail = 'maharajput941@gmail.com';
+                selectedSocialName = 'Mahjbeen Afzal';
+            }
+
+            accountEmailEl.textContent = selectedSocialEmail;
+            accountNameEl.textContent = selectedSocialName;
+            avatarInitialEl.textContent = selectedSocialName.charAt(0).toUpperCase();
+
+            socialModal.style.display = 'flex';
+        }
+
+        function closeSocialModal() {
+            socialModal.style.display = 'none';
+        }
+
+        function useCustomEmailSocial() {
+            const custom = prompt(`Enter ${currentSocialProvider} Email Address:`, selectedSocialEmail);
+            if (custom && custom.includes('@')) {
+                selectedSocialEmail = custom.trim();
+                selectedSocialName = custom.split('@')[0];
+                accountEmailEl.textContent = selectedSocialEmail;
+                accountNameEl.textContent = selectedSocialName;
+                avatarInitialEl.textContent = selectedSocialName.charAt(0).toUpperCase();
+                proceedSocialAuth();
+            }
+        }
+
+        async function proceedSocialAuth() {
+            closeSocialModal();
+            showAlert(`Connecting to ${currentSocialProvider} OAuth... Authenticating with Backend API...`, 'success');
+
+            try {
+                // Call our Express.js backend /api/auth/social-login endpoint
+                const res = await fetch('/api/auth/social-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        provider: currentSocialProvider,
+                        email: selectedSocialEmail,
+                        name: selectedSocialName
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    showAlert(data.message + ' (Redirecting to Dashboard...)', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1600);
+                } else {
+                    showAlert(data.message || `${currentSocialProvider} login failed`, 'error');
+                }
+            } catch (err) {
+                showAlert(`Server communication error during ${currentSocialProvider} login: ` + err.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
