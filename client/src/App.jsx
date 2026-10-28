@@ -7,6 +7,7 @@ import CheckoutModal from './components/CheckoutModal';
 import AuthModal from './components/AuthModal';
 import MyOrdersModal from './components/MyOrdersModal';
 import WishlistModal from './components/WishlistModal';
+import fallbackProducts from './productsFallback.json';
 import { ShoppingBag, RefreshCw, AlertCircle, ArrowUpDown } from 'lucide-react';
 
 export default function App() {
@@ -88,7 +89,12 @@ export default function App() {
       const data = await res.json();
       setProducts(data);
     } catch (err) {
-      setError('Fake Store API se products load nahi ho sake: ' + err.message);
+      console.warn('Fake Store API fetch issue:', err.message);
+      if (fallbackProducts && fallbackProducts.length > 0) {
+        setProducts(fallbackProducts);
+      } else {
+        setError('Fake Store API se products load nahi ho sake: ' + err.message);
+      }
     } finally {
       setLoading(false);
     }
